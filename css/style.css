@@ -1,0 +1,11 @@
+.orange {
+    color: var(--animal-color);
+}
+
+.green {
+    color: var(--vegetable-color);
+}
+
+.blue {
+    color: var(--user-color);
+}
