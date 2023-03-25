@@ -13,17 +13,6 @@ BONUS
 1- modificare la struttura dati fornita e valorizzare la proprietà "color" in modo dinamico: generare in modo casuale un codice colore, sapendo che la notazione esadecimale è formata dal simbolo "#" seguito da 6 caratteri alfanumerici compresi tra 0 e 9 e A e F.
 
 2- popolare le options della select della milestone 3 dinamicamente.
-
-Consigli del giorno
-Come sempre, iniziamo prima di tutto dall'analisi e comprensione della consegna. Scomponiamo il problema in micro-passaggi logici che solamente in un secondo momento trasformeremo in codice.
-
-Le icone presenti nella struttura dati fanno riferimento alla nota libreria Font Awesome, perciò come prima cosa assicuriamoci di aver inserito il link alla cdn nell'head della pagina.
-
-Dopodiché, basandoci sul codice di riferimento nel sito di Font Awesome, analizziamo come è formato il tag <i> di un'icona qualsiasi, in particolare focalizziamoci sulle classi.
-
-Come possiamo usare i dati presenti nella nostra struttura dati per creare l'elemento html nel modo corretto e visualizzare l'icona in pagina?
-
-Inizialmente può essere sufficiente stampare dei semplici div, senza alcuno stile, con all'interno l'icona e uno span con il nome. Solamente quando la parte logica è completa, ci dedichiamo al css.
 */
 
 const icons = [
@@ -151,7 +140,7 @@ function createCard (ico) {
 return card
 }
 
-function renderPage () {
+function renderCard () {
     document.documentElement.style.setProperty("--animal-color", "orange");
     document.documentElement.style.setProperty("--vegetable-color", "green");
     document.documentElement.style.setProperty("--user-color", "blue");
@@ -165,6 +154,7 @@ function renderPage () {
             )
             row.innerHTML = cards;
         break;
+
         case "animal":
             icons.forEach((icon, index) =>{
 
@@ -176,14 +166,56 @@ function renderPage () {
         break;
 
         case "vegetable":
+            icons.forEach((icon, index) =>{
+
+                if (icon.type === "vegetable"){
+                    cards += createCard(icons[index]);
+                }
+            })
+            row.innerHTML = cards
         break;
 
         case "user":
+            icons.forEach((icon, index) =>{
+
+                if (icon.type === "user"){
+                    cards += createCard(icons[index]);
+                }
+            })
+            row.innerHTML = cards
         break;          
 
 };
 }
 
+function renderSelect() {
+    //Duplico l'array copiando solo le key Type e filtro con la funzione uniqueType i doppioni
+    const arrFullType = icons.map((icon) => icon.type).filter(uniqueType);
+
+    function uniqueType (value, index, arr) {
+        return arr.indexOf(value) === index;
+    }
+
+    let options =``;
+    function createOptions () {
+        for (let i = 0; i < arrFullType.length; i++){
+        options +=`<option value="${arrFullType[i]}">${arrFullType[i].toUpperCase()}</option>`;
+        }
+        return options;
+    }
+
+
+    const header = document.querySelector(".bg-gradient");
+    header.innerHTML = `<label for="iconType">Filtra per tipo</label>
+    <select name="iconType" id="iconType" class=" text-white ms-2 bg-dark border-0 rounded-2 px-2">
+       <option value="all">ALL</option>
+        ${createOptions()}
+    </select>`
+    return header;
+}
+
+
+renderSelect();
 const select = document.querySelector("select");
-select.addEventListener("change", renderPage);
-renderPage(select)
+select.addEventListener("change", renderCard);
+renderCard(select);
