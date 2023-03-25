@@ -15,6 +15,30 @@ BONUS
 2- popolare le options della select della milestone 3 dinamicamente.
 */
 
+//Funzione che genera codice esadecimale casuale
+function getRndColor (){
+    function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min) + 1) + min;
+    }
+
+    let rndColor = "#"
+    for (let i = 0; i < 6; i++){
+        let rndDigit = getRndInteger(0, 16);
+        if(rndDigit === 10) rndColor += "A";
+        else if(rndDigit === 11) rndColor += "A";
+        else if(rndDigit === 12) rndColor += "B";
+        else if(rndDigit === 13) rndColor += "C";
+        else if(rndDigit === 14) rndColor += "D";
+        else if(rndDigit === 15) rndColor += "E";
+        else if(rndDigit === 16) rndColor += "F";
+        else rndColor += rndDigit;
+    }
+    console.log(rndColor);
+}
+
+getRndColor()
+
+//Array di oggetti
 const icons = [
     {
         name: 'cat',
@@ -132,14 +156,16 @@ const icons = [
 
 //Duplico l'array copiando solo le key Type e filtro con la funzione uniqueType i doppioni
 const arrFullType = icons.map((icon) => icon.type).filter(uniqueType);
+//Pusho all nell'array (poiché non è un type) usando unshift, così che al primo avvio le card verranno mostrate tutte
 arrFullType.unshift("all");
 
 function uniqueType (value, index, arr) {
     return arr.indexOf(value) === index;
 }
 
+//Funzione per renderizzare la Select
 function renderSelect() {
-
+    //Genero options in base a quanti type unici esistono nell'array
     function createOptions () {
         let options =``;
         for (let i = 0; i < arrFullType.length; i++){
@@ -157,25 +183,29 @@ function renderSelect() {
     return header;
 }
 
+//Funzione per creare una card
 function createCard (ico) {
     const card = `<div class="col mb-4 fs-1 text-center">
     <div class="card bg-black p-3">
-        <i class="${ico.prefix}${ico.family} ${ico.prefix}${ico.name} ${ico.color}"></i>
+        <i class="${ico.prefix}${ico.family} ${ico.prefix}${ico.name} ${ico.color}" style="color: "></i>
         <div class="text-uppercase text-white fw-medium mt-2 fs-6">${ico.name}</div>
     </div>
 </div>`;
 return card;
 }
 
+//Fuzione per renderizzare le card in base al valore della select
 function renderCard () {
+    //Assegno i colori alle variabli css
     document.documentElement.style.setProperty("--animal-color", "orange");
     document.documentElement.style.setProperty("--vegetable-color", "green");
     document.documentElement.style.setProperty("--user-color", "blue");
     const row = document.querySelector(".row");
     let cards = ``;
 
+    //Con un ciclo for genero le card
     for (let i = 0; i < arrFullType.length; i++){
-
+        //tutte
     if (select.value === "all"){
         icons.forEach((icon, index) => {
         cards += createCard(icons[index]);
@@ -183,6 +213,7 @@ function renderCard () {
         row.innerHTML = cards;
         return;
     }    
+        //filtrate per tipo
     else if (select.value === arrFullType[i]){
         icons.forEach((icon, index) =>{
             if (icon.type === arrFullType[i]){
