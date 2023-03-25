@@ -130,74 +130,18 @@ const icons = [
     }
 ];
 
-function createCard (ico) {
-    const card = `<div class="col mb-4 fs-1 text-center">
-    <div class="card bg-black p-3">
-        <i class="${ico.prefix}${ico.family} ${ico.prefix}${ico.name} ${ico.color}"></i>
-        <div class="text-uppercase text-white fw-medium mt-2 fs-6">${ico.name}</div>
-    </div>
-</div>`;
-return card
-}
+//Duplico l'array copiando solo le key Type e filtro con la funzione uniqueType i doppioni
+const arrFullType = icons.map((icon) => icon.type).filter(uniqueType);
+arrFullType.unshift("all");
 
-function renderCard () {
-    document.documentElement.style.setProperty("--animal-color", "orange");
-    document.documentElement.style.setProperty("--vegetable-color", "green");
-    document.documentElement.style.setProperty("--user-color", "blue");
-    const row = document.querySelector(".row");
-    let cards = ``
-    switch (select.value) {
-        case "all":
-            icons.forEach((icon, index) => {
-                cards += createCard(icons[index]);
-            }
-            )
-            row.innerHTML = cards;
-        break;
-
-        case "animal":
-            icons.forEach((icon, index) =>{
-
-                if (icon.type === "animal"){
-                    cards += createCard(icons[index]);
-                }
-            })
-            row.innerHTML = cards
-        break;
-
-        case "vegetable":
-            icons.forEach((icon, index) =>{
-
-                if (icon.type === "vegetable"){
-                    cards += createCard(icons[index]);
-                }
-            })
-            row.innerHTML = cards
-        break;
-
-        case "user":
-            icons.forEach((icon, index) =>{
-
-                if (icon.type === "user"){
-                    cards += createCard(icons[index]);
-                }
-            })
-            row.innerHTML = cards
-        break;          
-
-};
+function uniqueType (value, index, arr) {
+    return arr.indexOf(value) === index;
 }
 
 function renderSelect() {
-    //Duplico l'array copiando solo le key Type e filtro con la funzione uniqueType i doppioni
-    const arrFullType = icons.map((icon) => icon.type).filter(uniqueType);
 
-    function uniqueType (value, index, arr) {
-        return arr.indexOf(value) === index;
-    }
-
-    let options =``;
     function createOptions () {
+        let options =``;
         for (let i = 0; i < arrFullType.length; i++){
         options +=`<option value="${arrFullType[i]}">${arrFullType[i].toUpperCase()}</option>`;
         }
@@ -208,12 +152,48 @@ function renderSelect() {
     const header = document.querySelector(".bg-gradient");
     header.innerHTML = `<label for="iconType">Filtra per tipo</label>
     <select name="iconType" id="iconType" class=" text-white ms-2 bg-dark border-0 rounded-2 px-2">
-       <option value="all">ALL</option>
         ${createOptions()}
-    </select>`
+    </select>`;
     return header;
 }
 
+function createCard (ico) {
+    const card = `<div class="col mb-4 fs-1 text-center">
+    <div class="card bg-black p-3">
+        <i class="${ico.prefix}${ico.family} ${ico.prefix}${ico.name} ${ico.color}"></i>
+        <div class="text-uppercase text-white fw-medium mt-2 fs-6">${ico.name}</div>
+    </div>
+</div>`;
+return card;
+}
+
+function renderCard () {
+    document.documentElement.style.setProperty("--animal-color", "orange");
+    document.documentElement.style.setProperty("--vegetable-color", "green");
+    document.documentElement.style.setProperty("--user-color", "blue");
+    const row = document.querySelector(".row");
+    let cards = ``;
+
+    for (let i = 0; i < arrFullType.length; i++){
+
+    if (select.value === "all"){
+        icons.forEach((icon, index) => {
+        cards += createCard(icons[index]);
+        })
+        row.innerHTML = cards;
+        return;
+    }    
+    else if (select.value === arrFullType[i]){
+        icons.forEach((icon, index) =>{
+            if (icon.type === arrFullType[i]){
+            cards += createCard(icons[index]);
+            }
+        })
+        row.innerHTML = cards;
+        return;
+    }
+    }
+}
 
 renderSelect();
 const select = document.querySelector("select");
