@@ -1,11 +1,11 @@
-.orange {
+.animal {
     color: var(--animal-color);
 }
 
-.green {
+.vegetable {
     color: var(--vegetable-color);
 }
 
-.blue {
+.user {
     color: var(--user-color);
 }
